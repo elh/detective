@@ -1,11 +1,15 @@
 from bullet import Bullet
-from bullet import Input
 import yaml
+import argparse
 
 match_limit = 2
 
 def main():
-    entries = get_entries()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run detective on')
+    args = parser.parse_args()
+
+    entries = get_entries(args.story_file)
     print(">>> Welcome to the document archive.")
     print(">>> " + str(len(entries)) + " searchable entries...")
 
@@ -62,8 +66,8 @@ def format_entry_selections(entries):
     return results
 
 # for local usage from db (single yaml file)
-def get_entries():
-    with open('db.yaml', 'r') as file:
+def get_entries(file_name):
+    with open(file_name, 'r') as file:
         db = yaml.safe_load(file)
         return db['entries']
 
