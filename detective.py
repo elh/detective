@@ -62,7 +62,8 @@ def main():
 def format_entry_selections(entries):
     results = []
     for entry in entries:
-        results.append(entry['date'].strftime("%m/%d/%Y") + ": " + (entry['text'][:75] + '..') if len(entry['text']) > 75 else entry['text'])
+        truncated_text = entry['text'][:75] + '..' if len(entry['text']) > 75 else entry['text']
+        results.append(entry['date'].strftime("%m/%d/%Y") + ": " + truncated_text)
     return results
 
 # for local usage from db (single yaml file)
@@ -71,13 +72,12 @@ def get_entries(file_name):
         db = yaml.safe_load(file)
         return db['entries']
 
-# TODO: ensure sort by entry date
 def search_entries(entries, search_term):
     results = []
     for entry in entries:
         if search_term.lower() in entry['text'].lower():
             results.append(entry)
-    return results
+    return sorted(results, key=lambda x: x['date'])
 
 if __name__ == "__main__":
     main()
