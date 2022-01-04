@@ -2,27 +2,29 @@ from bullet import Bullet
 import yaml
 import argparse
 
-# TODO: this should be configured w/ the story file
-match_limit = 2
+default_match_count_limit = int(1e6)
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run detective on')
     args = parser.parse_args()
 
-    entries = get_entries(args.story_file)
-    print(">>> Welcome to the document archive.")
-    print(">>> " + str(len(entries)) + " searchable entries...")
+    story = get_story(args.story_file)
+    if 'intro_text' in story:
+        print(">>> " + story['intro_text'])
+    if 'intro_stats' in story and story['intro_stats']:
+        print(">>> " + str(len(story['entries'])) + " searchable entries...")
+    if 'match_count_limit' not in story or story['match_count_limit'] == 0:
+        story['match_count_limit'] = default_match_count_limit
 
     first_run = True
 
     while True:
         # ----- Prompt for search term -----
         # special handling for initial run. automatically seed and run with default first search term
-        if first_run:
-            # TODO: this should be configured w/ the story file
-            print("\nSearch: COVID")
-            search_term = "COVID"
+        if first_run and 'initial_search' in story:
+            print("\nSearch: " + story['initial_search'])
+            search_term = story['initial_search']
         else:
             # do not use bullet.Input. cannot handle up and down arrow keys smh
             search_term = input("\nSearch: ").strip()
@@ -31,13 +33,13 @@ def main():
         first_run = False
 
         # ----- Search -----
-        matches = search_entries(entries, search_term)
+        matches = search_entries(story['entries'], search_term)
         if len(matches) == 0:
             print("no matches")
             continue
-        visible_matches = matches[:match_limit]
+        visible_matches = matches[:story['match_count_limit']]
 
-        prompt = f'\n{len(visible_matches)} matches. Read entry:' if len(matches) <= match_limit else f'\nFirst {len(visible_matches)} of {len(matches)} matches. Read entry:'
+        prompt = f'\n{len(visible_matches)} matches. Read entry:' if len(matches) <= story['match_count_limit'] else f'\nFirst {len(visible_matches)} of {len(matches)} matches. Read entry:'
 
         # ----- Show results -----
         while True:
@@ -67,9 +69,16 @@ def format_entry_selections(entries):
     return results
 
 # for local usage from db (single yaml file)
-def get_entries(file_name):
+# * intro_text: string. if set, text to display at start of session (optional)
+# * intro_stats: bool. if set, display some stats about the story at start of session (optional)
+# * match_count_limit: int. if set, maximum number of entries that can be returned by a search (optional)
+# * initial_search: string. if set, start the session with an already executed serach for this term (optional)
+# * entries: sequence of mappings w/ keys. this is the meat of the data
+#     * date: date. date for the entry. matches will be returned in order of date ascending
+#     * text: string. the content of the entry to be displayed
+def get_story(file_name):
     with open(file_name, 'r') as file:
-        return yaml.safe_load(file)['entries']
+        return yaml.safe_load(file)
 
 def search_entries(entries, search_term):
     results = [entry for entry in entries if search_term.lower() in entry['text'].lower()]
