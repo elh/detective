@@ -2,6 +2,7 @@ from bullet import Bullet
 import yaml
 import argparse
 
+# TODO: this should be configured w/ the story file
 match_limit = 2
 
 def main():
@@ -19,6 +20,7 @@ def main():
         # ----- Prompt for search term -----
         # special handling for initial run. automatically seed and run with default first search term
         if first_run:
+            # TODO: this should be configured w/ the story file
             print("\nSearch: COVID")
             search_term = "COVID"
         else:
@@ -54,9 +56,7 @@ def main():
             result = cli.launch()
             if result[1] == len(cli_choices)-1: # exit
                 break
-            print()
-            print(matches[result[1]]['date'])
-            print(matches[result[1]]['text'])
+            print("\n" + str(matches[result[1]]['date']) + "\n" + matches[result[1]]['text'])
             # TODO: bold matching text selection
 
 def format_entry_selections(entries):
@@ -69,14 +69,10 @@ def format_entry_selections(entries):
 # for local usage from db (single yaml file)
 def get_entries(file_name):
     with open(file_name, 'r') as file:
-        db = yaml.safe_load(file)
-        return db['entries']
+        return yaml.safe_load(file)['entries']
 
 def search_entries(entries, search_term):
-    results = []
-    for entry in entries:
-        if search_term.lower() in entry['text'].lower():
-            results.append(entry)
+    results = [entry for entry in entries if search_term.lower() in entry['text'].lower()]
     return sorted(results, key=lambda x: x['date'])
 
 if __name__ == "__main__":
