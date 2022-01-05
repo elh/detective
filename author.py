@@ -8,13 +8,17 @@ from story import get_story
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run author on')
-    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries')
+    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words')
     args = parser.parse_args()
+
+    pp = pprint.PrettyPrinter(indent=4, sort_dicts=False)
 
     story = get_story(args.story_file)
 
     if args.mode == 'words_to_entries':
-        words_to_entries(story)
+        pp.pprint(words_to_entries(story))
+    elif args.mode == 'entries_to_words':
+        pp.pprint(entries_to_words(story))
     else:
         print('mode must be one of: words')
         sys.exit(0)
@@ -32,10 +36,15 @@ def words_to_entries(story):
                     'count': 1,
                     'entry_ids': [entry['id']]
                 }
-    word_counts = dict(sorted(word_counts.items(), key=lambda item: item[1]['count'], reverse=True))
+    return dict(sorted(word_counts.items(), key=lambda item: item[1]['count'], reverse=True))
 
-    pp = pprint.PrettyPrinter(indent=4, sort_dicts=False)
-    pp.pprint(word_counts)
+def entries_to_words(story):
+    words = {} # entry id -> set of words in it
+    for entry in story['entries']:
+        words[entry['id']] = set()
+        for word in set([remove_punc(word.lower()) for word in entry['text'].split()]):
+            words[entry['id']].add(word)
+    return words
 
 def remove_punc(str):
     # not including apostrophe because can be meaningful in contractions
