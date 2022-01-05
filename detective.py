@@ -1,6 +1,9 @@
-from bullet import Bullet
-import yaml
+import sys
+import os
 import argparse
+from bullet import Bullet
+
+from story import get_story, search_entries
 
 default_match_count_limit = int(1e6)
 
@@ -68,21 +71,12 @@ def format_entry_selections(entries):
         results.append(entry['date'].strftime("%m/%d/%Y") + ": " + truncated_text)
     return results
 
-# for local usage from db (single yaml file)
-# * intro_text: string. if set, text to display at start of session (optional)
-# * intro_stats: bool. if set, display some stats about the story at start of session (optional)
-# * match_count_limit: int. if set, maximum number of entries that can be returned by a search (optional)
-# * initial_search: string. if set, start the session with an already executed serach for this term (optional)
-# * entries: sequence of mappings w/ keys. this is the meat of the data
-#     * date: date. date for the entry. matches will be returned in order of date ascending
-#     * text: string. the content of the entry to be displayed
-def get_story(file_name):
-    with open(file_name, 'r') as file:
-        return yaml.safe_load(file)
-
-def search_entries(entries, search_term):
-    results = [entry for entry in entries if search_term.lower() in entry['text'].lower()]
-    return sorted(results, key=lambda x: x['date'])
-
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('\nSession ended. Goodbye')
+        try:
+            sys.exit(0)
+        except SystemExit:
+            os._exit(0)
