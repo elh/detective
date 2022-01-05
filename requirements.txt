@@ -1,2 +1,3 @@
 bullet==2.2.0
 pyyaml
+graphviz==0.19.1

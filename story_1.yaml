@@ -14,7 +14,7 @@ entries:
   text: Our little project is going well. The Program is running now and security has not detected the stolen CPU cycles. Getting detected on this is probably the only thing that could go wrong. 
 - id: C
   date: 2020-03-10
-  text: 'The virus is starting to be detected in other countries. A formal name has been given: COVID-19. China failed to keep it contained in their borders and other countries are starting to discuss how to handle it. The Program is already behind schedule and we cannot afford any distractions if this is going to keep the team out of the office.'
+  text: 'The virus is starting to be detected in other countries. A medical name has been given: COVID. China failed to keep it contained in their borders and other countries are starting to discuss how to handle it. The Program is already behind schedule and we cannot afford any distractions if this is going to keep the team out of the office.'
 - id: D
   date: 2020-03-14
   text: blah blah blah blah. virus shmirus. COVID BOVID
