@@ -3,9 +3,7 @@ import os
 import argparse
 from bullet import Bullet
 
-from story import get_story, search_entries
-
-default_match_count_limit = int(1e6)
+from story import get_story, search_entries, get_short_date_and_text
 
 def main():
     parser = argparse.ArgumentParser()
@@ -17,8 +15,6 @@ def main():
         print(">>> " + story['intro_text'])
     if 'intro_stats' in story and story['intro_stats']:
         print(">>> " + str(len(story['entries'])) + " searchable entries...")
-    if 'match_count_limit' not in story or story['match_count_limit'] == 0:
-        story['match_count_limit'] = default_match_count_limit
 
     first_run = True
 
@@ -65,11 +61,8 @@ def main():
             # TODO: bold matching text selection
 
 def format_entry_selections(entries):
-    results = []
-    for entry in entries:
-        truncated_text = entry['text'][:75] + '..' if len(entry['text']) > 75 else entry['text']
-        results.append(entry['date'].strftime("%m/%d/%Y") + ": " + truncated_text)
-    return results
+    # just use get_short_date_and_text impl as is for now
+    return [get_short_date_and_text(entry) for entry in entries]
 
 if __name__ == "__main__":
     try:

@@ -6,21 +6,30 @@ intro_stats: True
 match_count_limit: 2
 initial_search: COVID
 entries:
-- date: 2020-02-20
+- id: A
+  date: 2020-02-20
   text: We finally have added the last needed member to the team. Gamma is going to be able to help us with getting this wraped up by the end of the year
-- date: 2020-03-05
+- id: B
+  date: 2020-03-05
   text: Our little project is going well. The Program is running now and security has not detected the stolen CPU cycles. Getting detected on this is probably the only thing that could go wrong. 
-- date: 2020-03-10
+- id: C
+  date: 2020-03-10
   text: 'The virus is starting to be detected in other countries. A formal name has been given: COVID-19. China failed to keep it contained in their borders and other countries are starting to discuss how to handle it. The Program is already behind schedule and we cannot afford any distractions if this is going to keep the team out of the office.'
-- date: 2020-03-14
+- id: D
+  date: 2020-03-14
   text: blah blah blah blah. virus shmirus. COVID BOVID
-- date: 2020-03-15
+- id: E
+  date: 2020-03-15
   text: The company has just announced that they are shutting down the office. COVID is crazy... We are supposed to go in some time this week to pack up our desks. We have no plan for how to transition the Program offline. There is a big risk here that when we shutdown the Program, the company will actually see performance improve because we are no longer stealing CPU cycles. Gamma has an idea of how to replace this another harmless script in order to keep monitoring profiles consistent. Meeting soon about this.
-- date: 2020-03-16
+- id: F
+  date: 2020-03-16
   text: We spent all night testing this and I think we will be able to withdraw safely. 
-- date: 2020-04-01
+- id: G
+  date: 2020-04-01
   text: The COVID lockdown is pretty annoying but staying safe seems like it is pretty doable. Having a lot of time at home is giving us more time than we expected to work on things. A little bit of a silver lining even though we have reduced resources.
-- date: 2020-05-10
+- id: H
+  date: 2020-05-10
   text: Beta noticed some unusual activity on our private server. Out of an abundance of caution, we are moving documents to the encrypted server, Aqua.
-- date: 2020-05-11
+- id: I
+  date: 2020-05-11
   text: Aqua bc8846d73f74222074c8b91d0f19afb5e5910f1638243ebaacc59638278cb2c8
