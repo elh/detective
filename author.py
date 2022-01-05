@@ -8,7 +8,7 @@ from story import get_story
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run author on')
-    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words')
+    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words, searches_to_entries')
     args = parser.parse_args()
 
     pp = pprint.PrettyPrinter(indent=4, sort_dicts=False)
@@ -19,8 +19,10 @@ def main():
         pp.pprint(words_to_entries(story))
     elif args.mode == 'entries_to_words':
         pp.pprint(entries_to_words(story))
+    elif args.mode == 'searches_to_entries':
+        pp.pprint(searches_to_entries(story))
     else:
-        print('mode must be one of: words')
+        print('mode must be one of: words_to_entries, entries_to_words, searches_to_entries')
         sys.exit(0)
 
 # number of entries words appear in
@@ -37,6 +39,13 @@ def words_to_entries(story):
                     'entry_ids': [entry['id']]
                 }
     return dict(sorted(word_counts.items(), key=lambda item: item[1]['count'], reverse=True))
+
+# show what entries searches would return. this respects the story-configured match limit
+def searches_to_entries(story):
+    w_to_e = words_to_entries(story)
+    for word in w_to_e:
+        w_to_e[word]['entry_ids'] = w_to_e[word]['entry_ids'][:story['match_count_limit']]
+    return w_to_e
 
 def entries_to_words(story):
     words = {} # entry id -> set of words in it
