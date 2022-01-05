@@ -6,10 +6,55 @@ import graphviz
 
 from story import get_story
 
+ignore_words = {
+    'i',
+    'you',
+    'he',
+    'she',
+    'we',
+    'us',
+    'they',
+    'them',
+    'theirs',
+    'my',
+    'mine',
+    'her',
+    'him',
+    'to',
+    'the',
+    'of',
+    'is',
+    'this',
+    'be',
+    'and',
+    'have',
+    'has',
+    'a',
+    'an',
+    'on',
+    'our',
+    'that',
+    'are',
+    'it',
+    'how',
+    'why',
+    'who',
+    'when',
+    'what',
+    'where',
+    "in",
+    "out",
+    "go",
+    "some",
+    "will",
+    "up",
+    "down"
+}
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run author on')
-    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words, searches_to_entries, entries_graph')
+    parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words, searches_to_entries, entries_graph, searches_graph')
     args = parser.parse_args()
 
     pp = pprint.PrettyPrinter(indent=4, sort_dicts=False)
@@ -24,8 +69,10 @@ def main():
         pp.pprint(searches_to_entries(story))
     elif args.mode == 'entries_graph':
         print(entries_graph(story)) # just normal print
+    elif args.mode == 'searches_graph':
+        print(searches_graph(story)) # just normal print
     else:
-        print('mode must be one of: words_to_entries, entries_to_words, searches_to_entries, entries_graph')
+        print('mode must be one of: words_to_entries, entries_to_words, searches_to_entries, entries_graph, searches_graph')
         sys.exit(0)
 
 # number of entries words appear in
@@ -73,44 +120,6 @@ def entries_graph(story):
     # set up start
     e_to_w[start] = {story['initial_search'].lower().strip()}
 
-    ignore_words = {
-        'i',
-        'you',
-        'he',
-        'she',
-        'we',
-        'us',
-        'they',
-        'them',
-        'theirs',
-        'my',
-        'mine',
-        'her',
-        'him',
-        'to',
-        'the',
-        'of',
-        'is',
-        'this',
-        'be',
-        'and',
-        'have',
-        'has',
-        'a',
-        'an',
-        'on',
-        'our',
-        'that',
-        'are',
-        'it',
-        'how',
-        'why',
-        'who',
-        'when',
-        'what',
-        'where'
-    }
-
     # traversal
     seen = {start}
     fringe = [start]
@@ -130,6 +139,50 @@ def entries_graph(story):
                 if e not in seen:
                     seen.add(e)
                     fringe.append(e)
+
+    return dot.source
+
+def searches_graph(story):
+    dot = graphviz.Digraph()
+
+    s_to_e = searches_to_entries(story)
+    e_to_w = entries_to_words(story)
+
+    searches = set()
+    for s in s_to_e:
+        if s in ignore_words:
+            continue
+        search_entry_ids = s_to_e[s]['entry_ids']
+        # this is really simplistic...
+        if len(search_entry_ids) <= 1:
+            continue
+        searches.add(s)
+
+    for s in searches:
+        if s in ignore_words:
+            continue
+        search_entry_ids = s_to_e[s]['entry_ids']
+        # this is really simplistic...
+        if len(search_entry_ids) <= 1:
+            continue
+
+        if 'initial_search' in story and story['initial_search'].lower().strip() == s:
+            dot.node(s, s + ": " + ', '.join(search_entry_ids), color='green')
+        else:
+            dot.node(s, s + ": " + ', '.join(search_entry_ids))
+
+        neighbors = set()
+        for search_entry_id in search_entry_ids:
+            for n in e_to_w[search_entry_id]:
+                if n not in searches:
+                    continue
+                # only create 1 edge across the pair of search terms. also prevent edges back to self
+                if s >= n:
+                    continue
+                neighbors.add(n)
+
+        for n in neighbors:
+            dot.edge(s, n, dir="none")
 
     return dot.source
 
