@@ -58,7 +58,6 @@ def main():
             if result[1] == len(cli_choices)-1: # exit
                 break
             print("\n" + str(matches[result[1]]['date']) + "\n" + matches[result[1]]['text'])
-            # TODO: bold matching text selection
 
 def format_entry_selections(entries):
     # just use get_short_date_and_text impl as is for now

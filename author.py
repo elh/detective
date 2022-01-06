@@ -24,11 +24,14 @@ ignore_words = {
     'the',
     'of',
     'is',
+    'was',
     'this',
     'be',
     'and',
     'have',
     'has',
+    'had',
+    'got',
     'a',
     'an',
     'on',
@@ -48,7 +51,9 @@ ignore_words = {
     "some",
     "will",
     "up",
-    "down"
+    "down",
+    'as',
+    'with'
 }
 
 def main():
@@ -80,6 +85,8 @@ def words_to_entries(story):
     word_counts = {} # word -> dictionary of count:int and entry_ids:list of entry ids
     for entry in story['entries']:
         for word in set([remove_punc(word.lower()) for word in entry['text'].split()]):
+            if word in ignore_words:
+                continue
             if word in word_counts:
                 word_counts[word]['count'] += 1
                 word_counts[word]['entry_ids'].append(entry['id'])
@@ -104,6 +111,7 @@ def searches_to_entries(story):
 # say an edge is unidirectional.
 # this is only practical at all with a manually specified white list of key terms
 # this is bad
+# TODO: update so that edges respect the match limit
 def entries_graph(story):
     if 'initial_search' not in story:
         print("start required. not sure how I want to visualize this right now")
@@ -142,6 +150,10 @@ def entries_graph(story):
 
     return dot.source
 
+# TODO: update so that edges respect the match limit
+# these should be gone in story 2
+# eve -> song [dir=none]
+# eve -> hannah [dir=none]
 def searches_graph(story):
     dot = graphviz.Digraph()
 
@@ -159,13 +171,7 @@ def searches_graph(story):
         searches.add(s)
 
     for s in searches:
-        if s in ignore_words:
-            continue
         search_entry_ids = s_to_e[s]['entry_ids']
-        # this is really simplistic...
-        if len(search_entry_ids) <= 1:
-            continue
-
         if 'initial_search' in story and story['initial_search'].lower().strip() == s:
             dot.node(s, s + ": " + ', '.join(search_entry_ids), color='green')
         else:
@@ -191,6 +197,8 @@ def entries_to_words(story):
     for entry in story['entries']:
         words[entry['id']] = set()
         for word in set([remove_punc(word.lower()) for word in entry['text'].split()]):
+            if word in ignore_words:
+                continue
             words[entry['id']].add(word)
     return words
 

@@ -1,0 +1,33 @@
+# 2nd test story. first one created with some sort of planning. using hand drawn graphs and tooling only to verify and not direct creation of entries
+---
+intro_stats: True
+match_count_limit: 3
+initial_search: Hannah
+entries:
+- id: A
+  date: 2021-01-01
+  text: Hannah is being interviewed.
+- id: B
+  date: 2021-01-02
+  text: The mirror was a gift from Simon. Her twin got a mirror too.
+- id: C
+  date: 2021-01-03
+  text: Hannah got a mirror as a present a long time ago.
+- id: D
+  date: 2021-01-04
+  text: Hannah had a very interesting favorite song.
+- id: E
+  date: 2021-01-05
+  text: Her twin was named Eve.
+- id: F
+  date: 2021-01-06
+  text: She sang her song with her guitar.
+- id: G
+  date: 2021-01-07
+  text: Hannah's song was about a twin...
+- id: H
+  date: 2021-01-08
+  text: Hannah and Eve had been sharing a life! Her twin inspired the song.
+- id: I
+  date: 2021-01-09
+  text: The guitar was brought to the precinct.
