@@ -8,10 +8,15 @@ create text-based games in the style of "Her Story"
 ### usage
 1. be the detective. `python detective.py` (`python detective.py -h` for more info)
 2. be the author. `python author.py` (`python author.py -h` for more info)
-    * `--mode` modes: words_to_entries, words_to_entries, entries_to_words, searches_to_entries, entries_graph, searches_graph
+    * `--mode` options
+        * `words_to_entries`
+        * `entries_to_words`
+        * `searches_to_entries`
+        * `entries_graph`
+        * `searches_graph`
 
 ### data
-stories are defined by yaml files. see example `story_1.yaml`
+stories are defined by yaml files. see example `story_2.yaml`
 
 * intro_text: string. if set, text to display at start of session (optional)
 * intro_stats: bool. if set, display some stats about the story at start of session (optional)

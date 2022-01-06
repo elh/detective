@@ -1,5 +1,6 @@
 # 2nd test story. first one created with some sort of planning. using hand drawn graphs and tooling only to verify and not direct creation of entries
 ---
+intro_text: These are the transcripts of police interviews you can search through.
 intro_stats: True
 match_count_limit: 3
 initial_search: Hannah

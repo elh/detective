@@ -7,7 +7,7 @@ from story import get_story, search_entries, get_short_date_and_text
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--story_file', type=str, default="story_1.yaml", help='story yaml to run detective on')
+    parser.add_argument('--story_file', type=str, default="story_2.yaml", help='story yaml to run detective on')
     args = parser.parse_args()
 
     story = get_story(args.story_file)
