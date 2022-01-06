@@ -1,0 +1,35 @@
+# SPOILER WARNING FOR "HER STORY"
+# this because a new, unrelated story_2.yaml for testing which has the same shape. evolved separately
+---
+intro_text: These are the transcripts of interviews you can search through to figure out what is going on
+intro_stats: True
+match_count_limit: 3
+initial_search: Hannah
+entries:
+- id: A
+  date: 1994-06-18 12:00:00
+  text: Hannah is being interviewed.
+- id: B
+  date: 1994-06-18 12:05:00
+  text: Hannah got a mirror as a present a long time ago.
+- id: C
+  date: 1994-06-18 12:06:00
+  text: The mirror was a gift from Simon. Her twin got a mirror too.
+- id: D
+  date: 1994-06-20 15:30:00
+  text: Hannah had a very interesting favorite song.
+- id: E
+  date: 1994-06-20 15:40:00
+  text: The guitar was brought to the precinct.
+- id: F
+  date: 1994-06-20 15:45:00
+  text: She sang her song with her guitar.
+- id: G
+  date: 1994-06-20 15:49:00
+  text: Hannah's song was about a twin...
+- id: H
+  date: 1994-06-21 08:00:00
+  text: Her twin was named Eve.
+- id: I
+  date: 1994-06-21 08:05:00
+  text: Hannah and Eve had been sharing a life! Her twin inspired the song.

@@ -1,34 +1,34 @@
 # 2nd test story. first one created with some sort of planning. using hand drawn graphs and tooling only to verify and not direct creation of entries
 ---
-intro_text: These are the transcripts of police interviews you can search through.
+intro_text: These are the documents you can search through to figure out what is going on
 intro_stats: True
 match_count_limit: 3
-initial_search: Hannah
+initial_search: Elle
 entries:
 - id: A
-  date: 2021-01-01
-  text: Hannah is being interviewed.
+  date: 2021-01-01 12:00:00
+  text: Elle is being interviewed.
 - id: B
-  date: 2021-01-02
-  text: The mirror was a gift from Simon. Her twin got a mirror too.
+  date: 2021-01-01 12:10:00
+  text: Elle used to work in catering.
 - id: C
-  date: 2021-01-03
-  text: Hannah got a mirror as a present a long time ago.
+  date: 2021-01-01 12:11:00
+  text: The catering company was hired for an event at the museum 2 years ago.
 - id: D
-  date: 2021-01-04
-  text: Hannah had a very interesting favorite song.
+  date: 2021-01-02 14:30:00
+  text: Elle had some unusual purchases online recently.
 - id: E
-  date: 2021-01-05
-  text: Her twin was named Eve.
+  date: 2021-01-02 14:40:00
+  text: X7000 is a metal cutting torch!
 - id: F
-  date: 2021-01-06
-  text: She sang her song with her guitar.
+  date: 2021-01-02 14:45:00
+  text: One of the most recent purchases was a X7000.
 - id: G
-  date: 2021-01-07
-  text: Hannah's song was about a twin...
+  date: 2021-01-02 18:00:00
+  text: The last of the Elle's purchases was delivered to the museum.
 - id: H
-  date: 2021-01-08
-  text: Hannah and Eve had been sharing a life! Her twin inspired the song.
+  date: 2021-01-10 07:00:00
+  text: Otto works at the museum.
 - id: I
-  date: 2021-01-09
-  text: The guitar was brought to the precinct.
+  date: 2021-01-13 07:01:00
+  text: Elle and Otto have been in cahoots! They were sending purchases to the museum and hiding there before the art heist!!!

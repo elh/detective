@@ -1,4 +1,5 @@
 import yaml
+import datetime
 
 default_match_count_limit = int(1e6)
 
@@ -9,7 +10,7 @@ default_match_count_limit = int(1e6)
 # * initial_search: string. if set, start the session with an already executed serach for this term (optional)
 # * entries: sequence of mappings w/ keys. this is the meat of the data
 #     * id: string. if not set, id will be set to entry's position index in list of entries (optional)
-#     * date: date. date for the entry. matches will be returned in order of date ascending
+#     * date: date|datetime. date for the entry. matches will be returned in order of date ascending
 #     * text: string. the content of the entry to be displayed
 def get_story(file_name):
     with open(file_name, 'r') as file:
@@ -33,4 +34,8 @@ def search_entries(entries, search_term):
     return sorted(results, key=lambda x: x['date'])
 
 def get_short_date_and_text(entry):
-    return entry['date'].strftime("%m/%d/%Y") + ": " + (entry['text'][:75] + '..' if len(entry['text']) > 75 else entry['text'])
+    date = entry['date'].strftime("%m/%d/%Y")
+    if type(entry['date']) is datetime.datetime:
+        date = entry['date'].strftime("%m/%d/%Y, %H:%M:%S")
+
+    return date + ": " + (entry['text'][:75] + '..' if len(entry['text']) > 75 else entry['text'])

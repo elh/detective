@@ -24,7 +24,7 @@ stories are defined by yaml files. see example `story_2.yaml`
 * initial_search: string. if set, start the session with an already executed serach for this term (optional)
 * entries: sequence of mappings w/ keys. this is the meat of the data
     * id: string. if not set, id will be set to entry's position index in list of entries (optional)
-    * date: date. date for the entry. matches will be returned in order of date ascending
+    * date: date|datetime. date for the entry. matches will be returned in order of date ascending
     * text: string. the content of the entry to be displayed
 
 ### TODO
