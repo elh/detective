@@ -16,7 +16,7 @@ create text-based games in the style of "Her Story"
         * `searches_graph`
 
 ### data
-stories are defined by yaml files. see example `story_2.yaml`
+stories are defined by yaml files. see example `stories/story_2.yaml`
 
 * intro_text: string. if set, text to display at start of session (optional)
 * intro_stats: bool. if set, display some stats about the story at start of session (optional)

@@ -59,7 +59,7 @@ ignore_words = {
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--story_file', type=str, default="story_2.yaml", help='story yaml to run author on')
+    parser.add_argument('--story_file', type=str, default="stories/story_2.yaml", help='story yaml to run author on')
     parser.add_argument('--mode', type=str, default="words_to_entries", help='mode must be one of: words_to_entries, entries_to_words, searches_to_entries, entries_graph, searches_graph')
     args = parser.parse_args()
 
