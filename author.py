@@ -111,7 +111,7 @@ def searches_to_entries(story):
 # also prescribing directions in any of these graphs is pretty tricky. there are very specific topological conditions needed to
 # say an edge is unidirectional.
 # this is only practical at all with a manually specified white list of key terms
-# this is bad
+# Deprecated in favor of `searches_graph`. There are some other UI things like directions of arrows that could be improved but do not care to do so now.
 # TODO: update so that edges respect the match limit
 def entries_graph(story):
     if 'initial_search' not in story:
