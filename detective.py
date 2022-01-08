@@ -26,7 +26,8 @@ def main():
                 'term': story['initial_search'] if 'initial_search' in story else None
             }
         },
-        'search_history': [] # a ordered list of unique tuples (search term, all match count)
+        'search_history': [],           # a ordered list of unique tuples (search term, all match count)
+        'read_entry_history': set()     # a set of entry_ids that have been read
     }
 
     # start game loop: display prompt, take input, update game
@@ -51,7 +52,7 @@ def main():
                 }
             }
         elif state['next_prompt']['prompt'] == 'search_results':
-            res = search_results_prompt(state['next_prompt'].get('args',{}))
+            res = search_results_prompt(state['next_prompt'].get('args',{}), state['read_entry_history'])
 
             # update game, next prompt
             search_results_prompt_args = state['next_prompt']['args']
@@ -68,6 +69,7 @@ def main():
             print("\n" + str(entry['date']) + "\n" + entry['text'])
 
             # update game, next prompt
+            state['read_entry_history'].add(entry['id'])
             state['next_prompt'] = {
                 'prompt': 'search_results',
                 'args': state['next_prompt']['args']['search_results_prompt_args']
@@ -91,6 +93,7 @@ def main():
 # returns search term
 def search_prompt(args):
     term = args.get('term', "")
+
     if term != "" and term is not None:
         print("\nSearch: " + term)
         return term
@@ -102,13 +105,13 @@ def search_prompt(args):
         return search_term
 
 # returns a dict w/ selection type and selection
-def search_results_prompt(args):
+def search_results_prompt(args, read_entry_history):
     match_entries = args.get('match_entries', [])
     all_entry_count = args.get('all_entry_count', 0)
     match_count_limit = args.get('match_count_limit', 0)
 
     prompt = f'\n{len(match_entries)} matches. Read entry:' if all_entry_count <= match_count_limit else f'\nFirst {len(match_entries)} of {all_entry_count} matches. Read entry:'
-    cli_choices = format_entry_selections(match_entries)
+    cli_choices = format_entry_selections(match_entries, read_entry_history)
     cli_choices.append("> run a new search <") # second to last
     cli_choices.append("> search history <") # last
 
@@ -155,9 +158,9 @@ def search_history_prompt(search_history):
 def format_search_history_selections(search_history):
     return [v[0] + " (" + str(v[1]) + ")" for v in search_history]
 
-def format_entry_selections(entries):
+def format_entry_selections(entries, read_entry_history):
     # just use get_short_date_and_text impl as is for now
-    return [get_short_date_and_text(entry) for entry in entries]
+    return [ ("  " if entry['id'] in read_entry_history else "* ") + get_short_date_and_text(entry) for entry in entries]
 
 if __name__ == "__main__":
     try:

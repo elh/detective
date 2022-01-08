@@ -30,7 +30,8 @@ stories are defined by yaml files. see example `stories/story_2.yaml`
 detective mode
 - [x] basic loop from story file
 - [x] search history
-- [ ] read history of entries
+- [x] read history of entries. flag unread entries
+- [ ] display progress % of all entries read
 - [ ] persistence
 
 author mode
