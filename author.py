@@ -73,10 +73,8 @@ def main():
         pp.pprint(entries_to_words(story))
     elif args.mode == 'entries_graph':
         print(entries_graph(story)) # just normal print
-    elif args.mode == 'searches_graph': #
-        print(searches_graph(story)) # just normal print
-    elif args.mode == 'searches_graph_new': # TODO: clean this up
-        print(searches_graph_to_graphviz(searches_graph_new(story))) # just normal print
+    elif args.mode == 'searches_graph':
+        print(searches_graph_to_graphviz(searches_graph(story))) # just normal print
     else:
         print('mode must be one of: searches_to_entries, entries_to_words, entries_graph, searches_graph')
         sys.exit(0)
@@ -159,7 +157,7 @@ def entries_graph(story):
 #   ... the searches_to_entries fields ...
 #   edges_to: list of strings. list of target search terms that are reachable from this source term. this captures the directional edges in the graph. if term A
 #             and term B both have each other in their edges_to lists, that is a bidirectional edge
-def searches_graph_new(story):
+def searches_graph(story):
     s_to_e = searches_to_entries(story)
     e_to_w = entries_to_words(story)
 
@@ -204,51 +202,6 @@ def searches_graph_to_graphviz(g):
             else:
                 dot.edge(term, neighbor)
         
-    return dot.source
-
-
-# TODO: update so that edges respect the match limit
-# these should be gone in story 2
-# eve -> song [dir=none]
-# eve -> hannah [dir=none]
-def searches_graph(story):
-    dot = graphviz.Digraph()
-
-    s_to_e = searches_to_entries(story)
-    e_to_w = entries_to_words(story)
-
-    searches = set()
-    for s in s_to_e:
-        if s in ignore_words:
-            continue
-        search_entry_ids = s_to_e[s]['match_entry_ids']
-        # Hmm.. This is tricky to reason about. I think this is too restrictive because what if "Alice" only shows in 1 entry but that entry also contains "Bob"
-        # but after Bob's n-match limit. However, that does seem like a degenerate case because why would the "Alice" search be interesting? How did you get 
-        # to it? Probably from another term so search_entry_ids would be >1.
-        if len(search_entry_ids) <= 1:
-            continue
-        searches.add(s)
-
-    for s in searches:
-        search_entry_ids = s_to_e[s]['match_entry_ids']
-        if 'initial_search' in story and story['initial_search'].lower().strip() == s:
-            dot.node(s, s + ": " + ', '.join(search_entry_ids), color='green')
-        else:
-            dot.node(s, s + ": " + ', '.join(search_entry_ids))
-
-        neighbors = set()
-        for search_entry_id in search_entry_ids:
-            for n in e_to_w[search_entry_id]:
-                if n not in searches:
-                    continue
-                # only create 1 edge across the pair of search terms. also prevent edges back to self
-                if s >= n:
-                    continue
-                neighbors.add(n)
-
-        for n in neighbors:
-            dot.edge(s, n, dir="none")
-
     return dot.source
 
 def entries_to_words(story):
