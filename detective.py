@@ -16,7 +16,9 @@ def main():
     if 'intro_stats' in story and story['intro_stats']:
         print(">>> " + str(len(story['entries'])) + " searchable entries...")
 
+    # detective state
     first_run = True
+    search_history = [] # a ordered list of unique tuples (search term, all match count)
 
     while True:
         # ----- Prompt for search term -----
@@ -29,11 +31,17 @@ def main():
             search_term = input("\nSearch: ").strip()
             if len(search_term) == 0:
                 continue
-        first_run = False
 
         # ----- Search -----
         matches = search_entries(story['entries'], search_term)
+
+        # update detective state
+        first_run = False
+        if (search_term.lower(), len(matches)) not in search_history:
+            search_history.append((search_term.lower(), len(matches)))
+
         if len(matches) == 0:
+            # TODO: get to search history from here
             print("no matches")
             continue
         visible_matches = matches[:story['match_count_limit']]
@@ -43,7 +51,8 @@ def main():
         # ----- Show results -----
         while True:
             cli_choices = format_entry_selections(visible_matches)
-            cli_choices.append("> run a new search <")
+            cli_choices.append("> run a new search <") # second to last
+            cli_choices.append("> search history <") # last
 
             cli = Bullet(
                 prompt = prompt,
@@ -55,9 +64,12 @@ def main():
             )
 
             result = cli.launch()
-            if result[1] == len(cli_choices)-1: # exit
+            if result[1] == len(cli_choices)-2: # exit. new search
                 break
-            print("\n" + str(matches[result[1]]['date']) + "\n" + matches[result[1]]['text'])
+            elif result[1] == len(cli_choices)-1: # show search history
+                print(search_history)
+            else:
+                print("\n" + str(matches[result[1]]['date']) + "\n" + matches[result[1]]['text'])
 
 def format_entry_selections(entries):
     # just use get_short_date_and_text impl as is for now
