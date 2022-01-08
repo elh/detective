@@ -9,9 +9,8 @@ create text-based games in the style of "Her Story"
 1. be the detective. `python detective.py` (`python detective.py -h` for more info)
 2. be the author. `python author.py` (`python author.py -h` for more info)
     * `--mode` options
-        * `words_to_entries`
-        * `entries_to_words`
         * `searches_to_entries`
+        * `entries_to_words`
         * `entries_graph`
         * `searches_graph`
 
