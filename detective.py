@@ -1,7 +1,7 @@
 import sys
 import os
 import argparse
-from bullet import Bullet
+from bullet import Bullet, ScrollBar
 
 from story import get_story, search_entries, get_short_date_and_text
 
@@ -73,12 +73,14 @@ def main():
                 'args': state['next_prompt']['args']['search_results_prompt_args']
             }
         elif state['next_prompt']['prompt'] == 'search_history':
-            # TODO: fix all of this.
-            res = search_history_prompt(state['search_history'])
+            term = search_history_prompt(state['search_history'])
 
             # update game, next prompt
             state['next_prompt'] = {
                 'prompt': 'new_search',
+                'args': {
+                    'term': term
+                }
             }
         else:
             print('ERROR: unknown next prompt!')
@@ -130,10 +132,28 @@ def search_results_prompt(args):
         ret['entry'] = match_entries[result[1]]
     return ret
 
-# returns a dict w/ selection type and selection
+# returns string. term to start next search
 def search_history_prompt(search_history):
-    print(search_history)
-    return None
+    cli_choices = format_search_history_selections(search_history)
+    cli_choices.append("> run a new search <") # last
+
+    cli = ScrollBar(
+        "\nSearch History:",
+        cli_choices,
+        height = 16,
+        margin = 1,
+        pointer = "👉",
+        return_index = True
+    )
+    result = cli.launch()
+
+    if result[1] == len(cli_choices)-1: # exit. new search
+        return ""
+    else:
+        return search_history[result[1]][0]
+
+def format_search_history_selections(search_history):
+    return [v[0] + " (" + str(v[1]) + ")" for v in search_history]
 
 def format_entry_selections(entries):
     # just use get_short_date_and_text impl as is for now

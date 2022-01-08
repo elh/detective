@@ -29,14 +29,14 @@ stories are defined by yaml files. see example `stories/story_2.yaml`
 ### TODO
 detective mode
 - [x] basic loop from story file
-- [ ] search history
-- [ ] progress through entries
+- [x] search history
+- [ ] read history of entries
 - [ ] persistence
 
 author mode
 - [x] common terms
-- [ ] traversals through search terms. beats and threads
+- [x] basic traversals through search terms. beats and threads
 
 extra
-- [ ] integrated text adventure. (password for encrypted files, frog fractions...)
+- [ ] integrated text adventure. (passwords, text adventure...)
 - [ ] interactive elements based on entries uncovered
