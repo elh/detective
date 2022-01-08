@@ -166,7 +166,9 @@ def searches_graph(story):
         if s in ignore_words:
             continue
         search_entry_ids = s_to_e[s]['entry_ids']
-        # this is really simplistic...
+        # Hmm.. This is tricky to reason about. I think this is too restrictive because what if "Alice" only shows in 1 entry but that entry also contains "Bob"
+        # but after Bob's n-match limit. However, that does seem like a degenerate case because why would the "Alice" search be interesting? How did you get 
+        # to it? Probably from another term so search_entry_ids would be >1.
         if len(search_entry_ids) <= 1:
             continue
         searches.add(s)

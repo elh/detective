@@ -1,0 +1,17 @@
+# this is a test for a specific case where there are entries with Alice and Bob but there are n-match entries for Alice with Bob but not the other way around.
+---
+match_count_limit: 2
+initial_search: Alice
+entries:
+- id: "1"
+  date: 2021-01-01
+  text: Alice
+- id: "2"
+  date: 2021-01-02
+  text: Bob
+- id: "3"
+  date: 2021-01-03
+  text: Bob again
+- id: "4"
+  date: 2021-01-04
+  text: Alice and Bob
