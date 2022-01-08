@@ -31,7 +31,7 @@ detective mode
 - [x] basic loop from story file
 - [x] search history
 - [x] read history of entries. flag unread entries
-- [ ] display progress % of all entries read
+- [x] display progress % of all entries read
 - [ ] persistence
 
 author mode

@@ -18,7 +18,7 @@ def main():
     if 'intro_stats' in story and story['intro_stats']:
         print(">>> " + str(len(story['entries'])) + " searchable entries...")
 
-    # prompt types:
+    # prompt types: new_search, search_results, read_entry, search_history
     state = {
         'next_prompt': {
             'prompt': 'new_search',
@@ -84,6 +84,13 @@ def main():
                     'term': term
                 }
             }
+        elif state['next_prompt']['prompt'] == 'read_entry_history':
+            display_read_entry_history(story, state['read_entry_history'])
+
+            # update game, next prompt
+            state['next_prompt'] = {
+                'prompt': 'new_search'
+            }
         else:
             print('ERROR: unknown next prompt!')
             break
@@ -101,7 +108,7 @@ def search_prompt(args):
         # do not use bullet.Input. cannot handle up and down arrow keys smh
         search_term = input("\nSearch: ").strip()
         if len(search_term) == 0:
-            return search_prompt()
+            return search_prompt(args)
         return search_term
 
 # returns a dict w/ selection type and selection
@@ -112,8 +119,9 @@ def search_results_prompt(args, read_entry_history):
 
     prompt = f'\n{len(match_entries)} matches. Read entry:' if all_entry_count <= match_count_limit else f'\nFirst {len(match_entries)} of {all_entry_count} matches. Read entry:'
     cli_choices = format_entry_selections(match_entries, read_entry_history)
-    cli_choices.append("> run a new search <") # second to last
-    cli_choices.append("> search history <") # last
+    cli_choices.append("> run a new search <") # third to last
+    cli_choices.append("> search history <") # second to last
+    cli_choices.append("> show read entry progress <") # last
 
     cli = Bullet(
         prompt = prompt,
@@ -126,10 +134,12 @@ def search_results_prompt(args, read_entry_history):
     result = cli.launch()
 
     ret = {}
-    if result[1] == len(cli_choices)-2: # exit. new search
+    if result[1] == len(cli_choices)-3: # exit. new search
         ret['selection_type'] = "new_search"
-    elif result[1] == len(cli_choices)-1: # show search history
+    elif result[1] == len(cli_choices)-2: # show search history
         ret['selection_type'] = "search_history"
+    elif result[1] == len(cli_choices)-1: # show read progress
+        ret['selection_type'] = "read_entry_history"
     else:
         ret['selection_type'] = "read_entry"
         ret['entry'] = match_entries[result[1]]
@@ -154,6 +164,23 @@ def search_history_prompt(search_history):
         return ""
     else:
         return search_history[result[1]][0]
+
+# no return
+def display_read_entry_history(story, read_entry_history):
+    progress_str = ""
+    read_count = 0
+    for idx, e in enumerate(story['entries']):
+        if idx != 0 and idx % 10 == 0:
+            progress_str += "\n"
+
+        if e['id'] in read_entry_history:
+            progress_str += "x"
+            read_count += 1
+        else:
+            progress_str += "o"
+
+    progress_pct = str(round((read_count / len(story['entries'])) * 100, 2)) + "%"
+    print("\n" + progress_pct + " Progress ('o' is unread, 'x' is read):\n" + progress_str)
 
 def format_search_history_selections(search_history):
     return [v[0] + " (" + str(v[1]) + ")" for v in search_history]
