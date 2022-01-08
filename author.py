@@ -109,12 +109,7 @@ def searches_to_entries(story):
     return dict(sorted(ret.items(), key=lambda item: item[1]['all_entry_count'], reverse=True))
 
 # this builds a graph where nodes are entries and edges are the searches that connect them
-# this is excessively detailed and not capturing the right context. you actually just need a graph of how terms relate to each other
-# also prescribing directions in any of these graphs is pretty tricky. there are very specific topological conditions needed to
-# say an edge is unidirectional.
-# this is only practical at all with a manually specified white list of key terms
-# Deprecated in favor of `searches_graph`. There are some other UI things like directions of arrows that could be improved but do not care to do so now.
-# TODO: update so that edges respect the match limit
+# Deprecated in favor of `searches_graph`.
 def entries_graph(story):
     if 'initial_search' not in story:
         print("start required. not sure how I want to visualize this right now")
@@ -122,7 +117,7 @@ def entries_graph(story):
 
     start = '*START*'
     dot = graphviz.Digraph()
-    dot.node(start)
+    dot.node(start, color='green')
     for entry in story['entries']:
         dot.node(entry['id'])
 
@@ -145,7 +140,12 @@ def entries_graph(story):
             for e in search_to_entries:
                 if cur_entry == e:
                     continue
-                dot.edge(cur_entry, e, label=w)
+                if cur_entry in s_to_e[w]['match_entry_ids']:
+                    if cur_entry >= e:
+                        continue
+                    dot.edge(cur_entry, e, label=w, dir="both")
+                else:
+                    dot.edge(cur_entry, e, label=w)
 
                 if e not in seen:
                     seen.add(e)
