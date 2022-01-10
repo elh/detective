@@ -5,6 +5,10 @@ from bullet import Bullet, ScrollBar
 
 from story import get_story, search_entries, get_short_date_and_text
 
+new_search_option_text = "> run a new search <"
+search_history_option_text = "> search history <"
+read_progress_option_text = "> show read entry progress <"
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--story_file', type=str, default="stories/story_2.yaml", help='story yaml to run detective on')
@@ -34,6 +38,11 @@ def main():
     while True:
         if state['next_prompt']['prompt'] == 'new_search':
             search_term = search_prompt(state['next_prompt'].get('args',{}))
+            if len(search_term) == 0:
+                state['next_prompt'] = {
+                    'prompt': 'main_menu'
+                }
+                continue
 
             # update game, next prompt
             matches = search_entries(story['entries'], search_term)
@@ -43,6 +52,7 @@ def main():
 
             if (search_term.lower(), len(matches)) not in state['search_history']:
                 state['search_history'].append((search_term.lower(), len(matches)))
+
             state['next_prompt'] = {
                 'prompt': 'search_results',
                 'args': {
@@ -91,6 +101,13 @@ def main():
             state['next_prompt'] = {
                 'prompt': 'new_search'
             }
+        elif state['next_prompt']['prompt'] == 'main_menu':
+            res = display_main_menu()
+
+            # update game, next prompt
+            state['next_prompt'] = {
+                'prompt': res
+            }
         else:
             print('ERROR: unknown next prompt!')
             break
@@ -107,9 +124,32 @@ def search_prompt(args):
     else:
         # do not use bullet.Input. cannot handle up and down arrow keys smh
         search_term = input("\nSearch: ").strip()
-        if len(search_term) == 0:
-            return search_prompt(args)
         return search_term
+
+# returns next prompt
+def display_main_menu():
+    cli_choices = [
+        new_search_option_text,
+        search_history_option_text,
+        read_progress_option_text
+    ]
+
+    cli = Bullet(
+        prompt = "\nSelect:",
+        choices = cli_choices,
+        bullet = "",
+        margin = 2,
+        pad_right = 4,
+        return_index = True
+    )
+    result = cli.launch()
+
+    if result[1] == 0:
+        return 'new_search'
+    elif result[1] == 1:
+        return 'search_history'
+    else:
+        return 'read_entry_history'
 
 # returns a dict w/ selection type and selection
 def search_results_prompt(args, read_entry_history):
@@ -119,9 +159,9 @@ def search_results_prompt(args, read_entry_history):
 
     prompt = f'\n{len(match_entries)} matches. Read entry:' if all_entry_count <= match_count_limit else f'\nFirst {len(match_entries)} of {all_entry_count} matches. Read entry:'
     cli_choices = format_entry_selections(match_entries, read_entry_history)
-    cli_choices.append("> run a new search <") # third to last
-    cli_choices.append("> search history <") # second to last
-    cli_choices.append("> show read entry progress <") # last
+    cli_choices.append(new_search_option_text) # third to last
+    cli_choices.append(search_history_option_text) # second to last
+    cli_choices.append(read_progress_option_text) # last
 
     cli = Bullet(
         prompt = prompt,
@@ -148,7 +188,7 @@ def search_results_prompt(args, read_entry_history):
 # returns string. term to start next search
 def search_history_prompt(search_history):
     cli_choices = format_search_history_selections(search_history)
-    cli_choices.append("> run a new search <") # last
+    cli_choices.append(new_search_option_text) # last
 
     cli = ScrollBar(
         "\nSearch History:",
