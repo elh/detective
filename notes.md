@@ -13,6 +13,51 @@ Scheme = Nodes are search terms (that appear more than once) annotated with the 
 - [ ] 4. There are also additional features to represent "leaps" where a entry (and the search term that found it) can be connected to another search w/o an exact string match. For example, this could be used to model a puzzle or just a pattern match like a puzzle referencing "Alpha" and "Gamma" and then having the player guess "Beta" as a search term. This would need to be declared in the story config. Maybe try using dashed lined.
 - [ ] 5. Consider more scalable approach to either `ignore_words` or just allowing story config to whitelist meaningful search terms. Having the full traversal is still useful for author to realize if they have accidental connections they want to remove.
 
+#### original graph of story_2
+![graphviz (1)](https://user-images.githubusercontent.com/1035393/148710999-4da68698-86dd-4ea6-b213-b15af31291b6.png)
+```
+digraph {
+	elle [label="elle\nA, B, D, (I)" color=green]
+	elle -> purchases [dir=both]
+	museum [label="museum\nC, G, H, (I)"]
+	museum -> purchases [dir=both]
+	museum -> otto [dir=both]
+	purchases [label="purchases\nD, F, G, (I)"]
+	purchases -> x7000 [dir=both]
+	catering [label="catering\nB, C"]
+	catering -> elle [dir=both]
+	catering -> museum [dir=both]
+	x7000 [label="x7000\nE, F"]
+	otto [label="otto\nH, I"]
+	otto -> elle
+	otto -> purchases
+}
+```
+
+#### story_2 without "must pass" cycle edges
+graph with all "must pass" cycle edges removed. this makes the overall structure much more meaningful. removing all of those edges does not make the graph as a whole acyclical nor does it remove bidirectional edges.
+
+![graphviz (2)](https://user-images.githubusercontent.com/1035393/148711002-c6a968f2-72c9-42af-a4b3-cc6e47811f56.png)
+```
+digraph {
+	elle [label="elle\nA, B, D, (I)" color=green]
+	elle -> purchases # [dir=both]
+	elle -> catering # new
+	museum [label="museum\nC, G, H, (I)"]
+	museum -> purchases [dir=both]
+	museum -> otto # [dir=both]
+	purchases [label="purchases\nD, F, G, (I)"]
+	purchases -> x7000 # [dir=both]
+	catering [label="catering\nB, C"]
+    // catering -> elle [dir=both]
+	catering -> museum [dir=both]
+	x7000 [label="x7000\nE, F"]
+	otto [label="otto\nH, I"]
+    // otto -> elle
+	otto -> purchases
+}
+```
+
 ### `entries_graph`
 
 Scheme = Nodes are entries. Edges connect entries that share words
