@@ -129,6 +129,8 @@ def entries_graph(story):
     # traversal
     seen = {start}
     fringe = [start]
+    # this is an easy way to make sure we properly create the "both" graphviz edges correctly in 1 pass
+    bidirectional_edges = set()
     while fringe:
         cur_entry = fringe.pop(0)
         cur_words = e_to_w[cur_entry]
@@ -141,8 +143,9 @@ def entries_graph(story):
                 if cur_entry == e:
                     continue
                 if cur_entry in s_to_e[w]['match_entry_ids']:
-                    if cur_entry >= e:
+                    if (cur_entry, e) in bidirectional_edges or (e, cur_entry) in bidirectional_edges:
                         continue
+                    bidirectional_edges.add((cur_entry, e))
                     dot.edge(cur_entry, e, label=w, dir="both")
                 else:
                     dot.edge(cur_entry, e, label=w)
