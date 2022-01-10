@@ -1,11 +1,13 @@
-# detective
+# detective 🕵️
 
-create text-based games in the style of "Her Story"
+create and play text-based games in the style of "Her Story"
 
-### installation
+![detective](https://user-images.githubusercontent.com/1035393/148714247-828010e4-a024-407a-86d8-118049f96c7e.gif)
+
+### Setup
 `pip install -r requirements.txt`
 
-### usage
+### Usage
 1. be the detective. `python detective.py` (`python detective.py -h` for more info)
 2. be the author. `python author.py` (`python author.py -h` for more info)
     * `--mode` options
@@ -14,7 +16,7 @@ create text-based games in the style of "Her Story"
         * `entries_graph`
         * `searches_graph`
 
-### data
+### Story data
 stories are defined by yaml files. see example `stories/story_2.yaml`
 
 * intro_text: string. if set, text to display at start of session (optional)
@@ -26,18 +28,5 @@ stories are defined by yaml files. see example `stories/story_2.yaml`
     * date: date|datetime. date for the entry. matches will be returned in order of date ascending
     * text: string. the content of the entry to be displayed
 
-### TODO
-detective mode
-- [x] basic loop from story file
-- [x] search history
-- [x] read history of entries. flag unread entries
-- [x] display progress % of all entries read
-- [ ] persistence
-
-author mode
-- [x] common terms
-- [x] basic traversals through search terms. beats and threads
-
-extra
-- [ ] integrated text adventure. (passwords, text adventure...)
-- [ ] interactive elements based on entries uncovered
+### Under construction 🚧
+see [notes](https://github.com/elh/detective/blob/main/notes.md)

@@ -1,3 +1,21 @@
+## TODO
+#### detective mode
+- [x] basic loop from story file
+- [x] search history
+- [x] read history of entries. flag unread entries
+- [x] display progress % of all entries read
+- [ ] persistence
+
+#### author mode
+- [x] common terms
+- [x] basic traversals through search terms. beats and threads
+
+#### extra
+- [ ] integrated text adventure. (passwords, text adventure...)
+- [ ] interactive elements based on entries uncovered
+
+## Authoring
+
 ### `searches_graph`
 
 Scheme = Nodes are search terms (that appear more than once) annotated with the entries they appear in. A directional edge from A to B represents that matching entries for A contain the term B. a bidirectional edge means that both terms appear in the matching entries for the other. You can interpret this like "if you know A, you can learn B"
