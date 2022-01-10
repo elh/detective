@@ -210,17 +210,17 @@ def display_read_entry_history(story, read_entry_history):
     progress_str = ""
     read_count = 0
     for idx, e in enumerate(story['entries']):
-        if idx != 0 and idx % 10 == 0:
+        if idx != 0 and idx % 40 == 0:
             progress_str += "\n"
 
         if e['id'] in read_entry_history:
             progress_str += "x"
             read_count += 1
         else:
-            progress_str += "o"
+            progress_str += "."
 
     progress_pct = str(round((read_count / len(story['entries'])) * 100, 2)) + "%"
-    print("\n" + progress_pct + " Progress ('o' is unread, 'x' is read):\n" + progress_str)
+    print("\n" + progress_pct + " Progress ('.' is unread, 'x' is read):\n" + progress_str)
 
 def format_search_history_selections(search_history):
     return [v[0] + " (" + str(v[1]) + ")" for v in search_history]

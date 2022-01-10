@@ -4,15 +4,31 @@
 - [x] search history
 - [x] read history of entries. flag unread entries
 - [x] display progress % of all entries read
-- [ ] persistence
+- [ ] explicitly define state
+- [ ] separate game state machine + logic from input/output/ui
+- [ ] tests
+- [ ] author/debug mode. can generate a visualization at any time of used and reachable search terms
+- [ ] persistence?
 
 #### author mode
 - [x] common terms
 - [x] basic traversals through search terms. beats and threads
+- [ ] test with a large story
+- [ ] improve `ignore_words` config
+- [ ] story can configure important search terms for more emphasis in visualization
+- [ ] tests
+- [ ] story can configure "leaps" between search terms that are not exact matches from the entry texts
+- [ ] author mode that helps you add new terms and correctly intersect into story
+- [ ] fancier graph analysis
+	* try graph-tool
+    * "must pass" relationships
+		* A "must pass" B if A is reachable from the start vertex but is not reachable if B and all its edges are deleted
+		* hide edges that connect sources to targets that they "must pass" from the start
+    * Tarjan's strongly connected components algorithm
 
 #### extra
-- [ ] integrated text adventure. (passwords, text adventure...)
-- [ ] interactive elements based on entries uncovered
+- [ ] integrated broader text-based game. (passwords, text adventure...?)
+- [ ] UI elements based on entries uncovered?
 
 ## Authoring
 
@@ -84,3 +100,29 @@ Scheme = Nodes are entries. Edges connect entries that share words
 This was the first "author" visualization idea when working bottoms-up from a test story I created. This is likely way too detailed and noisy to be useful. I later realized that the likely higher leverage abstraction is just thinking about the traversal in terms of "searches" or search terms. This consolidates nodes and edges greatly and is also probably much more natural for design.
 
 Probably deprecated in favor of `searches_graph`. ~There are some other UI things like directions of arrows that could be improved but do not care to do so now.~
+
+## Detective
+
+state machine
+```
+digraph G {
+    new_search
+    search_results
+    read_entry
+    search_history
+    read_entry_history
+    main_menu
+
+    new_search -> search_results
+    new_search -> main_menu
+    search_results -> read_entry
+    search_results -> search_history
+    search_results -> read_entry_history
+    read_entry -> search_results
+    search_history -> new_search
+    read_entry_history -> new_search
+    main_menu -> new_search
+    main_menu -> search_history
+    main_menu -> read_entry_history
+}
+```
