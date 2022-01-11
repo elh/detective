@@ -1,5 +1,6 @@
 import yaml
 import datetime
+import re
 
 default_match_count_limit = int(1e6)
 
@@ -29,9 +30,45 @@ def get_story(file_name):
         story['entries'] = sorted(story['entries'], key=lambda x: x['date'])
         return story
 
+# follow "her story" logic
 def search_entries(entries, search_term):
-    results = [entry for entry in entries if search_term.lower() in entry['text'].lower()]
+    # an entry matches search if all tokenized alphanumeric parts exist in entry
+    # no substring matches of parts are allowed
+    # examples:
+    # search "one one" matches "one"                (each part of term is searched indpendently)
+    # search "one two" matches "three two one"      (order does not mater)
+    # search "haven't" matches "haven couldn't"     (punctuation splits tokens)
+    # search "a" does not match "apple"             (no partial matches)
+    # search "cars" matches "car"                   (unpluralization)
+    # search "car" matches "cars"                   (unpluralization)
+    # search "s" matches "hello"                    ("s" gets unpluralized into empty list)
+    def matches_entry(entry, search_term):
+        entry_parts = tokenize_text(entry['text'])
+        search_term_parts = tokenize_text(search_term)
+        for p in search_term_parts:
+            if p not in entry_parts:
+                return False
+        return True
+
+    results = [entry for entry in entries if matches_entry(entry, search_term)]
     return sorted(results, key=lambda x: x['date'])
+
+# follow "her story" logic
+# naive convesion of string into non-plural, alphanumeric parts
+def tokenize_text(txt):
+    ts = [unpluralize(t) for t in re.split('[^a-zA-Z]', txt.lower())]
+    return [t for t in ts if t != '']
+
+# follow "her story" logic
+# naive convesion of string into non-plural parts
+def unpluralize(w):
+    if w.endswith("ss"):
+        return w
+    elif w.endswith("es"):
+        return w[:len(w)-2]
+    if w.endswith("s"):
+        return w[:len(w)-1]
+    return w
 
 def get_short_date_and_text(entry):
     date = entry['date'].strftime("%m/%d/%Y")

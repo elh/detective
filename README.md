@@ -28,7 +28,7 @@ Stories are defined by yaml files. see example `stories/story_2.yaml`
     * `text`: string. the content of the entry to be displayed
 
 #### "author" tools
-Tools to help review structure of stories and plan ahead. The open-ended nature of this game design may make it hard to  keep track of connections between entries and also keep track of which entries are returnable as you iterate on stories.
+Tools to help review structure of stories and plan ahead. The open-ended nature of this game design may make it hard to keep track of connections between entries and also keep track of which entries are returnable as you iterate on stories.
 
 run `python author.py` w/ the desired `--mode` (`python author.py -h` for more info)
 * `searches_graph` mode. Creates a graphviz visualization. Vertices are search terms (that appear more than once) annotated with the entries they appear in. A directional edge from A to B represents that returnable entries for A contain the term B. A bidirectional edge means that both terms appear in the returnable entries for the other. You can interpret this like "if you know A, you can learn B"
@@ -41,6 +41,8 @@ run `python author.py` w/ the desired `--mode` (`python author.py -h` for more i
 * `entries_to_words` mode. Reports on words contained by entries
 
 FYI At the moment, there is a crude, hardcoded list of `ignore_words` in order to limit uninteresting search term matches
+
+Disclaimer: These have not been refined for large graphs of 50+ vertices like the original "Her Story" game. See [TODOs and notes](https://github.com/elh/detective/blob/main/notes.md) for WIP ideas.
 
 ### Context
 

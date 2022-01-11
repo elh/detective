@@ -4,6 +4,7 @@
 - [x] search history
 - [x] read history of entries. flag unread entries
 - [x] display progress % of all entries read
+- [x] test with a large story
 - [ ] explicitly define state
 - [ ] separate game state machine + logic from input/output/ui
 - [ ] tests
@@ -13,7 +14,7 @@
 #### author mode
 - [x] common terms
 - [x] basic traversals through search terms. beats and threads
-- [ ] test with a large story
+- [ ] test with a large story NOTE: viz needs work with 100+ vertices...
 - [ ] improve `ignore_words` config
 - [ ] story can configure important search terms for more emphasis in visualization
 - [ ] tests

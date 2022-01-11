@@ -38,20 +38,21 @@ def main():
     while True:
         if state['next_prompt']['prompt'] == 'new_search':
             search_term = search_prompt(state['next_prompt'].get('args',{}))
-            if len(search_term) == 0:
-                state['next_prompt'] = {
-                    'prompt': 'main_menu'
-                }
-                continue
+            # NOTE: actually just let them search for empty string
+            # if len(search_term) == 0:
+            #     state['next_prompt'] = {
+            #         'prompt': 'main_menu'
+            #     }
+            #     continue
 
             # update game, next prompt
             matches = search_entries(story['entries'], search_term)
-            if len(matches) == 0:
-                print("no matches")
-                continue
 
             if (search_term.lower(), len(matches)) not in state['search_history']:
                 state['search_history'].append((search_term.lower(), len(matches)))
+            if len(matches) == 0:
+                print("no matches")
+                continue
 
             state['next_prompt'] = {
                 'prompt': 'search_results',

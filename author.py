@@ -4,7 +4,7 @@ import argparse
 import pprint
 import graphviz
 
-from story import get_story
+from story import get_story, tokenize_text
 
 ignore_words = {
     'i',
@@ -23,11 +23,15 @@ ignore_words = {
     'to',
     'the',
     'of',
+    'for',
     'is',
     'was',
+    'were',
     'this',
     'be',
+    'been',
     'and',
+    'but',
     'have',
     'has',
     'had',
@@ -89,8 +93,8 @@ def main():
 def searches_to_entries(story):
     ret = {}
     for entry in story['entries']: # requires entries in order
-        for word in set([remove_punc(word.lower()) for word in entry['text'].split()]):
-            if word in ignore_words:
+        for word in set(tokenize_text(entry['text'])):
+            if word in ignore_words or len(word) <= 2:
                 continue
             if word in ret:
                 if entry['id'] not in ret[word]['all_entry_ids']:
@@ -135,7 +139,7 @@ def entries_graph(story):
         cur_entry = fringe.pop(0)
         cur_words = e_to_w[cur_entry]
         for w in cur_words:
-            if w in ignore_words:
+            if w in ignore_words or len(w) <= 2:
                 continue
 
             search_to_entries = s_to_e[w]['match_entry_ids']
@@ -211,18 +215,11 @@ def entries_to_words(story):
     words = {} # entry id -> set of words in it
     for entry in story['entries']:
         words[entry['id']] = set()
-        for word in set([remove_punc(word.lower()) for word in entry['text'].split()]):
-            if word in ignore_words:
+        for word in set(tokenize_text(entry['text'])):
+            if word in ignore_words or len(word) <= 2:
                 continue
             words[entry['id']].add(word)
     return words
-
-def remove_punc(str):
-    # not including apostrophe because can be meaningful in contractions
-    common_punc = '''!()-[]{};:"\,<>./?@#$%^&*_~'''
-    for char in common_punc:
-        str = str.replace(char, "")
-    return str
 
 if __name__ == "__main__":
     try:
